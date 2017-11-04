@@ -37,13 +37,13 @@ class Command
   def help
     @result[:text] = "
     Tip - send someone coins
-    `odntip tip @somebody 100`
+    `dptip tip @somebody 100`
     Deposit - put coin in
-    `odntip deposit`
+    `dptip deposit`
     Withdraw - take coin out
-    `odntip withdraw 'your_personal_odn_address' 100`
+    `dptip withdraw 'your_personal_dp_address' 100`
     Balance - find out how much is in your wallet
-    `odntip balance`"
+    `dptip balance`"
   end
 
   def balance
@@ -72,11 +72,11 @@ class Command
     tx = client.sendfrom @user_id, user_address(target_user), @amount
     @result[:text] = "#{@coin_config_module::TIP_PRETEXT} <@#{@user_id}> => <@#{target_user}> #{@amount}#{@coin_config_module::CURRENCY_ICON}"
     @result[:attachments] = [{
-      fallback:"<@#{@user_id}> tipped <@#{target_user}> #{@amount}ODN",
+      fallback:"<@#{@user_id}> tipped <@#{target_user}> #{@amount}DP",
       color: "good",
       fields: [{
-        title: "Wow a #{@amount}ODN tip!",
-        value: "http://obsidianblockchain2.westeurope.cloudapp.azure.com/transaction/#{tx}",
+        title: "Wow a #{@amount}DP tip!",
+        value: "http://cryptoblock.xyz:30003/tx/#{tx}",
         short: false
       }]
     }] 
