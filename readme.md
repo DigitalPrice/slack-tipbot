@@ -1,6 +1,6 @@
 # Slack Tipbot
 
-#### coin-agnostic crypto Tipbot for [Slack](https://slack.com)
+#### Tipbot for [Slack](https://slack.com)
 
 ## Setup
 
@@ -17,9 +17,7 @@ We're using [digitalocean.com](https://digitalocean.com) so these instructions w
   * Region
     * San Francisco
   * Linux Distributions
-    * Ubuntu 14.04 x64
-  * Applications
-    * Dokku
+    * Ubuntu 16.04 x64
   * Add SSH keys
 
 #### Configure hostname
@@ -40,13 +38,10 @@ We're using [digitalocean.com](https://digitalocean.com) so these instructions w
   * `ns3.digitalocean.com`
 * In digitalocean's `DNS` section set an `A-Record` for your `hostname` from your previous step
   * Make the `hostname` be the name of your app
-    * `foocointipper`
+    * `dptip`
   * Make the IP address be the one provided by digitalocean for your droplet.
-* After the DNS propogates
-  * In the `Zone file` of the DNS section of digital ocean you'll see:
-    * `foocointipper	 IN A	143.143.243.143`
   * `ping foocointipper.example.com`
-    * `PING foocointipper.example.com (143.143.243.143): 56 data bytes`
+    * `PING dptip.example.com (143.143.243.143): 56 data bytes`
 
 #### SSH into your new virualized box
 
@@ -58,106 +53,55 @@ We're using [digitalocean.com](https://digitalocean.com) so these instructions w
 
 #### Compile your coin
 
-For this example I'm using litecoin but the instructions should be similar for most other coins.
+Instructions can be found on the [DigitalPrice](http://digitalprice.org/) website.
 
-* Update and install dependencies
-  * `apt-get update && apt-get upgrade`
-  * `apt-get install ntp git build-essential libssl-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev`
-  * `wget http://miniupnp.free.fr/files/download.php?file=miniupnpc-1.8.tar.gz && tar -zxf download.php\?file\=miniupnpc-1.8.tar.gz && cd miniupnpc-1.8/`
-  * `make && make install && cd .. && rm -rf miniupnpc-1.8 download.php\?file\=miniupnpc-1.8.tar.gz`
-* Download the source code
-  * `git clone https://github.com/litecoin-project/litecoin`
-* Compile litecoind
-  * `cd litecoin/src`
-  * `make -f makefile.unix USE_UPNP=1 USE_QRCODE=1 USE_IPV6=1`
-  * `strip litecoind`
-* Add a user and move litecoind
-  * `adduser litecoin && usermod -g users litecoin && delgroup litecoin && chmod 0701 /home/litecoin`
-  * `mkdir /home/litecoin/bin`
-  * `cp ~/litecoin/src/litecoind /home/litecoin/bin/litecoind`
-  * `chown -R litecoin:users /home/litecoin/bin`
-  * `cd && rm -rf litecoin`
-* Run the daemon
-  * `su litecoin`
-  * `cd && bin/litecoind`    
-  * On the first run, litecoind will return an error and tell you to make a configuration file, named litecoin.conf, in order to add a username and password to the file.
-    * `nano ~/.litecoin/litecoin.conf && chmod 0600 ~/.litecoin/litecoin.conf`
-    * Add the following to your config file, changing the username and password
-    * to something secure. Make sure to take note of the `rpcuser` and * `rpcpassword` because you'll need them in a couple of steps
-      * `daemon=1`
-      * `rpcuser=litecoinrpc`
-      * `rpcpassword=f0000b4444r`
-      * `port=9333`
-      * `rpcport=8332`
-      * `rpcthreads=100`
-      * `irc=0`
-      * `dnsseed=1`
-  * Run the daemon again
-    * `cd && bin/litecoind` 
-  * To confirm that the daemon is running
-    * `cd && bin/litecoind getinfo`
-  * Now wait for the blockchain to sync
+* Configure the daemon by adding the following to your config file
+  * `daemon=1`
+  * `staking=0`
+  * `enableaccounts=1`
+  * `rpcport=56661`
+  * `rpcthreads=100`
+  * `irc=0`
+  * `dnsseed=1`
 
 #### Clone the CoinTipper Bot git repo
 
-* `git clone https://github.com/cgcardona/slack_tipbot.git`
-* Install bundler
-  * `apt-get install bundler`
-* Install Ruby 2.1.1 and rvm
-  * `\curl -sSL https://get.rvm.io | bash -s stable --ruby`
-  * To start using RVM you need to run `source /usr/local/rvm/scripts/rvm`
-* Run `bundle`
+* `git clone https://github.com/majordutch/slack_tipbot.git`
 
 #### Set up the Slack integration: as an "outgoing webhook" 
 
 * https://yoursite.slack.com/services/new/outgoing-webhook
 * Write down the api token they show you in this page
-* Set the trigger word. For the litecoin example above we use `litecointipper`
+* Set the trigger word. For the DigitalPrice example above we use `dptipper`
 * Set the Url to the server you'll be deploying on http://example.com:4567/tip
 
 #### Give your bot some attitude!
 
-* Copy `coin_config/litecoin.rb` to a file in `coin_config/` and name it after your coin. 
+* Copy `coin_config/digitalprice.rb` to a file in `coin_config/` and name it after your coin. 
 * Open your newly copied file and change the name of the `module` to the same name as your coin. 
 * This file contains all the snippets of text, emojis, and variables needed to customize your bot's behavior and attitude 
 
 #### Launch the server!
 
-* `RPC_USER=odn RPC_PASSWORD=odnpass SLACK_API_TOKEN=GYUfwwEioTlB2rueDw8S2r9t COIN=obsidian bundle exec ruby tipper.rb -p 4567`
+* `RPC_USER=rpcuser RPC_PASSWORD=rpcpassword SLACK_API_TOKEN=apikey COIN=digitalprice bundle exec ruby tipper.rb -p 4567`
   
 ## Commands
 
 * Tip - send someone coins
 
-  `litecointipper tip @somebody 100`
+  `dptipper tip @somebody 100`
 
 * Deposit - put coin in
 
-  `litecointipper deposit`
+  `dptipper deposit`
 
 * Withdraw - take coin out
 
-  `litecointipper withdraw LKzHM7rUB2sP1dgVskVFfdSoysnojuw2pX 100`
+  `dptipper withdraw UgTt2AAWeMYKT9yAE7iEn1YsZ9hQXLhLYh 100`
 
 * Balance - find out how much is in your wallet
 
-  `litecointipper balance`
-
-* Networkinfo - Get the output of getinfo.  Note:  this will disclose the entire aggregate balance of the hot wallet to everyone in the chat
-
-  `litecointipper networkinfo`
-
-## Tested coins
-
-This has been tested w/ 
-
-* btc
-* ltc
-* florincoin
-* doge
-* zeta
-
-Please let me know when you try it with other coins so that I can update the list. 
+  `dptipper balance`
 
 ## Security
 
