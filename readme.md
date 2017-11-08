@@ -66,7 +66,13 @@ Instructions can be found on the [DigitalPrice](http://digitalprice.org/) websit
 
 #### Clone the CoinTipper Bot git repo
 
-* `git clone https://github.com/majordutch/slack_tipbot.git`
+* `git clone https://github.com/majordutch/slack-tipbot.git`
+* Install bundler
+  * `apt-get install bundler`
+* Install Ruby 2.1.1 and rvm
+  * `\curl -sSL https://get.rvm.io | bash -s stable --ruby`
+  * To start using RVM you need to run `source /usr/local/rvm/scripts/rvm`
+* Run `bundle`
 
 #### Set up the Slack integration: as an "outgoing webhook" 
 

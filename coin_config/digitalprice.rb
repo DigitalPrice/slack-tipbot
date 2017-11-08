@@ -5,7 +5,7 @@ module Digitalprice
   WEALTHY_UPPER_BOUND = 1000
   WEALTHY_UPPER_BOUND_POSTTEXT = ' very wealthy!'
   WEALTHY_UPPER_BOUND_EMOJI = ':moneybag:'
-  BALANCE_REPLY_POSTTEXT = 'DP'
+  BALANCE_REPLY_POSTTEXT = ' DP'
   DEPOSIT_PRETEXT = 'Make a deposit'
   DEPOSIT_POSTTEXT = 'this is your address'
   TIP_ERROR_TEXT = 'pls say tip @username amount'
