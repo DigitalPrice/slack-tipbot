@@ -1,11 +1,4 @@
 require 'bitcoin-client'
-require 'marky_markov'
-markov = MarkyMarkov::Dictionary.new('dictionary')
-markov.parse_file "file.txt"
-markov.parse_file "file2.txt"
-puts markov.generate_n_words 10
-puts markov.generate_n_sentences 2
-markov.save_dictionary!
 Dir['./coin_config/*.rb'].each {|file| require file }
 require './bitcoin_client_extensions.rb'
 class Command
@@ -25,8 +18,6 @@ class Command
   def perform
     if ACTIONS.include?(@action)
       self.send("#{@action}".to_sym)
-    else
-      raise markov.generate_10_words 
     end
   end
 
